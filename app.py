@@ -6,7 +6,7 @@ import time
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# ================= DATA =================
+#for the data 
 @st.cache_data
 def load_data():
     movies = pd.read_csv('tmdb_5000_movies.csv')
@@ -47,7 +47,7 @@ def load_data():
 
 new_df = load_data()
 
-# ================= MODEL =================
+#Model 
 @st.cache_resource
 def create_similarity(data):
     cv = CountVectorizer(max_features=5000, stop_words='english')
@@ -56,8 +56,8 @@ def create_similarity(data):
 
 similarity = create_similarity(new_df)
 
-# ================= TMDB =================
-API_KEY = "abc7fc65db6b31ef33a5398702552afb"  # 🔥 replace
+# TMDB
+API_KEY = "abc7fc65db6b31ef33a5398702552afb" 
 
 def fetch_poster(movie_id, movie_name):
     try:
@@ -84,7 +84,7 @@ def fetch_poster(movie_id, movie_name):
     except:
         return "https://via.placeholder.com/300x450?text=Error"
 
-# ================= RECOMMEND =================
+# Recomdation 
 def recommend(movie):
     index = new_df[new_df['title'] == movie].index[0]
     distances = list(enumerate(similarity[index]))
@@ -99,14 +99,14 @@ def recommend(movie):
         rec_movies.append(title)
         rec_posters.append(fetch_poster(movie_id, title))
 
-        # better explanation
+
         reasons.append(f"🧠 Similar themes, genres & cast (score: {round(i[1],2)})")
 
         time.sleep(0.2)
 
     return rec_movies, rec_posters, reasons
 
-# ================= UI =================
+# UI 
 st.set_page_config(page_title="Movie Recommender", layout="wide")
 
 st.title("🎬 Movie Recommendation System")
